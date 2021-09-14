@@ -3,6 +3,7 @@ package com.example.diffviewer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.diffviewer.retrofit.rest.ApiHelper
+import com.example.diffviewer.repos.UserReposViewModel
 
 class ViewModelFactory(private val apiHelper: ApiHelper) : ViewModelProvider.Factory {
 

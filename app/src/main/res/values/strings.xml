@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Diff Viewer</string>
+    <string name="accessibility_language"> language</string>
+    <string name="image">image</string>
+    <string name="error">Something went wrong!</string>
+    <string name="network_error">Network is not Available</string>
+    <string name="accessibility_star">Repositories has %s stars</string>
+    <string name="accessibility_fork">Repositories has %s forks</string>
+    <string name="action_exit">Exit</string>
 </resources>
