@@ -25,7 +25,6 @@ Libraries Used
 * Third party
   * [Retrofit](https://square.github.io/retrofit/) to consume JSON data via HTTP REST client
   * [Picasso](https://square.github.io/picasso/) for image loading
-  * [Custom Tabs](https://developer.chrome.com/multidevice/android/customtabs) for launching URLs in our android applications
   * [Multidex](https://developer.android.com/studio/build/multidex) for Enable multidex for apps with over 64K methods
 
 Android Studio IDE setup
