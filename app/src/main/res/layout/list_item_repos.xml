@@ -5,6 +5,8 @@
 
         <import type="android.view.View" />
 
+        <import type="com.example.diffviewer.databinding.PicassoBindingAdapters" />
+
         <variable
             name="user"
             type="com.example.diffviewer.retrofit.model.UserReposResponse" />

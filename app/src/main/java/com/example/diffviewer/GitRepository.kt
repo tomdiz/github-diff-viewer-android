@@ -6,4 +6,7 @@ class GitRepository(private val apiHelper: ApiHelper) {
 
     suspend fun getUserRepos(username: String, sort: String, per_page: Int, page: Int) =
         apiHelper.getUserRepos(username, sort, per_page, page)
+
+    suspend fun getPullRequestForGithubRepo(username: String, repo_name: String) =
+        apiHelper.getPullRequestForGithubRepo(username, repo_name)
 }

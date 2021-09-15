@@ -1,6 +1,6 @@
 package com.example.diffviewer.retrofit.model
 
-data class GithubPullRequestResponse(
+data class PullRequestResponse(
     val author_association: String,
     val body: String,
     val closed_at: String,
