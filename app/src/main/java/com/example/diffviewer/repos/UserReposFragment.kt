@@ -21,6 +21,7 @@ import com.example.diffviewer.retrofit.rest.ApiHelper
 import com.example.diffviewer.ViewModelFactory
 import com.example.diffviewer.R
 import com.example.diffviewer.utils.RecyclerTouchListener
+import com.example.diffviewer.utils.replaceFragment
 import com.example.diffviewer.utils.EndlessRecyclerOnScrollListener
 
 
@@ -80,7 +81,7 @@ class UserReposFragment : Fragment() {
                 mBinding.recyclerView,
                 object : RecyclerTouchListener.ClickListener {
                     override fun onClick(view: View, position: Int) {
-                        //openCustomTabs(adapter.getRepos(position).html_url)
+                        //openFragment(RepoPRFragment(), adapter.getItem(position))
                     }
 
                     override fun onLongClick(view: View?, position: Int) {
@@ -105,6 +106,13 @@ class UserReposFragment : Fragment() {
             pageno = 1
             setupObservers()
         }
+    }
+
+    fun Fragment.openFragment(fragment: Fragment, username: String) {
+        val args = Bundle()
+        args.putString("username", username)
+        fragment.arguments = args
+        replaceFragment(fragment, R.id.fragment_container)
     }
 
     fun Fragment.isNetworkAvailable(): Boolean {
