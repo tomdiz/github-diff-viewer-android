@@ -1,4 +1,4 @@
-package com.example.diffviewer.repos
+package com.example.diffviewer.prs
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.example.diffviewer.databinding.FragmentRecyclerBinding
 import com.example.diffviewer.retrofit.model.Status
-import com.example.diffviewer.retrofit.model.UserReposResponse
+import com.example.diffviewer.retrofit.model.PullRequestResponse
 import com.example.diffviewer.retrofit.rest.ApiClient
 import com.example.diffviewer.retrofit.rest.ApiHelper
 import com.example.diffviewer.ViewModelFactory
@@ -23,19 +23,19 @@ import com.example.diffviewer.R
 import com.example.diffviewer.utils.RecyclerTouchListener
 import com.example.diffviewer.utils.replaceFragment
 import com.example.diffviewer.utils.EndlessRecyclerOnScrollListener
-import com.example.diffviewer.prs.RepoPRFragment
 
 
-class UserReposFragment : Fragment() {
+class RepoPRFragment : Fragment() {
 
     private lateinit var mBinding: FragmentRecyclerBinding
-    private lateinit var viewModel: UserReposViewModel
-    private var username = "magicalpanda"
+    private lateinit var viewModel: RepoPRViewModel
+    private var username = ""
+    private var repoName = ""
     private var pageno = 1
-    private lateinit var adapter: UserRepoListAdapter
+    private lateinit var adapter: RepoPRListAdapter
 
     companion object {
-        val TAG: String = UserReposFragment::class.java.simpleName
+        val TAG: String = RepoPRFragment::class.java.simpleName
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,11 +43,12 @@ class UserReposFragment : Fragment() {
         setHasOptionsMenu(true)
         arguments?.let {
             username = it.getString("username", "")
+            repoName = it.getString("repoName", "")
         }
         viewModel = ViewModelProvider(
             this,
             ViewModelFactory(ApiHelper(ApiClient.apiService))
-        ).get(UserReposViewModel::class.java)
+        ).get(RepoPRViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -67,10 +68,10 @@ class UserReposFragment : Fragment() {
     @SuppressLint("WrongConstant")
     private fun setupUI() {
         val context = activity as Context
-        activity?.title = "$username Repositories"
+        activity?.title = "$repoName PR"
 
         //Connect adapter with recyclerView
-        adapter = UserRepoListAdapter(arrayListOf())
+        adapter = RepoPRListAdapter(arrayListOf())
         mBinding.recyclerView.adapter = adapter
 
         //Add a LayoutManager
@@ -82,8 +83,7 @@ class UserReposFragment : Fragment() {
                 mBinding.recyclerView,
                 object : RecyclerTouchListener.ClickListener {
                     override fun onClick(view: View, position: Int) {
-                        val repo = adapter.getRepos(position)
-                        openFragment(RepoPRFragment(), username, repo.name)
+                        //openFragment(RepoPRFragment(), adapter.getItem(position))
                     }
 
                     override fun onLongClick(view: View?, position: Int) {
@@ -110,10 +110,9 @@ class UserReposFragment : Fragment() {
         }
     }
 
-    fun Fragment.openFragment(fragment: Fragment, username: String, repoName: String) {
+    fun Fragment.openFragment(fragment: Fragment, username: String) {
         val args = Bundle()
         args.putString("username", username)
-        args.putString("repoName", repoName)
         fragment.arguments = args
         replaceFragment(fragment, R.id.fragment_container)
     }
@@ -128,12 +127,12 @@ class UserReposFragment : Fragment() {
 
     private fun setupObservers() {
         if (activity?.baseContext?.let { isNetworkAvailable() }!!) {
-            viewModel.getUserRepos(username, "updated", 25, pageno).observe(viewLifecycleOwner, {
+            viewModel.getRepoPRs(username, repoName, 15, pageno).observe(viewLifecycleOwner, {
                 it?.let {  resource ->
                     when (resource.status) {
                         Status.SUCCESS -> {
                             mBinding.swipeRefreshLayout.isRefreshing = false
-                            resource.data?.let { users -> retrieveList(users) }
+                            resource.data?.let { prs -> retrieveList(prs) }
                         }
                         Status.ERROR -> {
                             mBinding.swipeRefreshLayout.isRefreshing = false
@@ -162,7 +161,7 @@ class UserReposFragment : Fragment() {
         }
     }
 
-    private fun retrieveList(repos: List<UserReposResponse>) {
+    private fun retrieveList(repos: List<PullRequestResponse>) {
         adapter.apply {
             if (pageno == 1) {
                 clearRepos()

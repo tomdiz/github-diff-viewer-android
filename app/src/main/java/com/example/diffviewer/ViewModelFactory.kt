@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.diffviewer.retrofit.rest.ApiHelper
 import com.example.diffviewer.repos.UserReposViewModel
+import com.example.diffviewer.prs.RepoPRViewModel
 
 class ViewModelFactory(private val apiHelper: ApiHelper) : ViewModelProvider.Factory {
 
@@ -11,6 +12,10 @@ class ViewModelFactory(private val apiHelper: ApiHelper) : ViewModelProvider.Fac
 
         if (modelClass.isAssignableFrom(UserReposViewModel::class.java)) {
             return UserReposViewModel(GitRepository(apiHelper)) as T
+        }
+
+        if (modelClass.isAssignableFrom(RepoPRViewModel::class.java)) {
+            return RepoPRViewModel(GitRepository(apiHelper)) as T
         }
 
         throw IllegalArgumentException("Unknown class name")

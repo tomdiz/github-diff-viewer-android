@@ -18,9 +18,11 @@ interface ApiService {
     ): ArrayList<UserReposResponse>
 
     @GET("/repos/{username}/{repo_name}/pulls")
-    fun getPullRequestForGithubRepo(
+    fun getPullRequestForRepo(
         @Path("username") username: String,
         @Path("repo_name") repoName: String,
+        @Query("per_page") per_page: Int,
+        @Query("page") page: Int,
         @Query("state") state: String = "all"
     ) : ArrayList<PullRequestResponse>
 
