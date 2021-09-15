@@ -127,7 +127,7 @@ class RepoPRFragment : Fragment() {
 
     private fun setupObservers() {
         if (activity?.baseContext?.let { isNetworkAvailable() }!!) {
-            viewModel.getRepoPRs(username, repoName, 15, pageno).observe(viewLifecycleOwner, {
+            viewModel.getRepoPRs(username, repoName, 15, pageno, "all").observe(viewLifecycleOwner, {
                 it?.let {  resource ->
                     when (resource.status) {
                         Status.SUCCESS -> {
