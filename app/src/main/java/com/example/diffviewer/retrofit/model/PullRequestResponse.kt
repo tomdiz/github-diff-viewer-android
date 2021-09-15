@@ -4,6 +4,7 @@ data class PullRequestResponse(
     val closed_at: String,
     val created_at: String,
     val title: String,
+    val number: Int,
     val user: User
 )
 

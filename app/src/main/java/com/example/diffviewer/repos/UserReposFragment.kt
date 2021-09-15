@@ -30,7 +30,7 @@ class UserReposFragment : Fragment() {
 
     private lateinit var mBinding: FragmentRecyclerBinding
     private lateinit var viewModel: UserReposViewModel
-    private var username = "magicalpanda"
+    private var username = ""
     private var pageno = 1
     private lateinit var adapter: UserRepoListAdapter
 

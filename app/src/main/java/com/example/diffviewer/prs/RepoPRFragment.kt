@@ -68,7 +68,7 @@ class RepoPRFragment : Fragment() {
     @SuppressLint("WrongConstant")
     private fun setupUI() {
         val context = activity as Context
-        activity?.title = "$repoName PR"
+        activity?.title = "$repoName Open PRs"
 
         //Connect adapter with recyclerView
         adapter = RepoPRListAdapter(arrayListOf())
@@ -127,7 +127,7 @@ class RepoPRFragment : Fragment() {
 
     private fun setupObservers() {
         if (activity?.baseContext?.let { isNetworkAvailable() }!!) {
-            viewModel.getRepoPRs(username, repoName, 15, pageno, "all").observe(viewLifecycleOwner, {
+            viewModel.getRepoPRs(username, repoName, 15, pageno, "open").observe(viewLifecycleOwner, {
                 it?.let {  resource ->
                     when (resource.status) {
                         Status.SUCCESS -> {

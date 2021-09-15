@@ -18,8 +18,8 @@ class MainActivity : AppCompatActivity() {
         // Define the listener for binding
         mBinding =  DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        val userSerachFragment = UserReposFragment()
-        addFragment(userSerachFragment, R.id.fragment_container)
+        val userNameFragment = UserNameFragment()
+        addFragment(userNameFragment, R.id.fragment_container)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
