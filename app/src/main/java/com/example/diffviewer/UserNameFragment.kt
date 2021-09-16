@@ -18,7 +18,6 @@ class UserNameFragment : Fragment(), View.OnClickListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mView = inflater.inflate(R.layout.fragment_username, container, false)
-        //onClicks()
         val continueBtn: Button = mView.findViewById(R.id.btnContinue)
         continueBtn.setOnClickListener(this)
         return mView.rootView

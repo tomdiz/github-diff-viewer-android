@@ -50,13 +50,9 @@ class UserReposFragment : Fragment() {
         ).get(UserReposViewModel::class.java)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         // Define the listener for binding
-        mBinding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_recycler, container, false)
+        mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_recycler, container, false)
 
         setupUI()
         setupObservers()

@@ -52,13 +52,9 @@ class RepoPRFragment : Fragment() {
         ).get(RepoPRViewModel::class.java)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         // Define the listener for binding
-        mBinding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_recycler, container, false)
+        mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_recycler, container, false)
 
         setupUI()
         setupObservers()
@@ -85,7 +81,7 @@ class RepoPRFragment : Fragment() {
                 object : RecyclerTouchListener.ClickListener {
                     override fun onClick(view: View, position: Int) {
                         val pr = adapter.getRepos(position)
-                        openFragment(PRFragment(), pr.number)
+                        openFragment(PRFragment(), username, repoName, 1129)
                     }
 
                     override fun onLongClick(view: View?, position: Int) {
@@ -112,8 +108,10 @@ class RepoPRFragment : Fragment() {
         }
     }
 
-    fun Fragment.openFragment(fragment: Fragment, pullnumber: Int) {
+    fun Fragment.openFragment(fragment: Fragment, username: String, repoName: String, pullnumber: Int) {
         val args = Bundle()
+        args.putString("username", username)
+        args.putString("repoName", repoName)
         args.putInt("pullnumber", pullnumber)
         fragment.arguments = args
         replaceFragment(fragment, R.id.fragment_container)
