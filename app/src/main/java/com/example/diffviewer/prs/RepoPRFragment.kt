@@ -81,7 +81,7 @@ class RepoPRFragment : Fragment() {
                 object : RecyclerTouchListener.ClickListener {
                     override fun onClick(view: View, position: Int) {
                         val pr = adapter.getRepos(position)
-                        openFragment(PRFragment(), username, repoName, 1129)
+                        openFragment(PRFragment(), username, repoName, pr.number)
                     }
 
                     override fun onLongClick(view: View?, position: Int) {

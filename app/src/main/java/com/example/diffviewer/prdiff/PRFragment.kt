@@ -8,12 +8,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.diffviewer.R
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import com.example.diffviewer.ViewModelFactory
-import com.example.diffviewer.databinding.FragmentRecyclerBinding
 import com.example.diffviewer.prs.RepoPRFragment
 import com.example.diffviewer.retrofit.model.PullRequestResponse
 import com.example.diffviewer.retrofit.model.Status
@@ -23,8 +23,8 @@ import com.google.android.material.snackbar.Snackbar
 
 class PRFragment  : Fragment() {
 
-    private lateinit var mBinding: FragmentRecyclerBinding
-
+    private lateinit var mView: View
+    private lateinit var diffWebtView: WebView
     private var username = ""
     private var repoName = ""
     private var pullnumber = 0
@@ -49,12 +49,13 @@ class PRFragment  : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        // Define the listener for binding
-        mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_recycler, container, false)
+        mView = inflater.inflate(R.layout.fragment_pull_request, container, false)
+        diffWebtView = mView.findViewById(R.id.diffWebView)
+        diffWebtView.settings.setJavaScriptEnabled(true)
 
         setupObservers()
 
-        return mBinding.root
+        return mView;
     }
 
     fun Fragment.isNetworkAvailable(): Boolean {
@@ -71,11 +72,9 @@ class PRFragment  : Fragment() {
                 it?.let {  resource ->
                     when (resource.status) {
                         Status.SUCCESS -> {
-                            mBinding.swipeRefreshLayout.isRefreshing = false
                             resource.data?.let { pr -> retrieve(pr) }
                         }
                         Status.ERROR -> {
-                            mBinding.swipeRefreshLayout.isRefreshing = false
                             Snackbar.make(
                                 activity?.window?.decorView?.rootView!!,
                                 R.string.error,
@@ -84,7 +83,6 @@ class PRFragment  : Fragment() {
                             Log.d(RepoPRFragment.TAG, it.message.toString())
                         }
                         Status.LOADING -> {
-                            mBinding.swipeRefreshLayout.isRefreshing = true
                         }
                     }
                 }
@@ -101,7 +99,14 @@ class PRFragment  : Fragment() {
         }
     }
 
-    private fun retrieve(repos: PullRequestResponse) {
+    private fun retrieve(pr: PullRequestResponse) {
+        diffWebtView.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+                url?.let { view?.loadUrl(it) }
+                return true
+            }
+        }
+        diffWebtView.loadUrl(pr.diff_url)
     }
 
 }
