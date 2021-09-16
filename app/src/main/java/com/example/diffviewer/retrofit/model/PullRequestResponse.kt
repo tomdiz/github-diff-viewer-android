@@ -1,14 +1,9 @@
 package com.example.diffviewer.retrofit.model
 
 data class PullRequestResponse(
-    val closed_at: String,
-    val created_at: String,
-    val title: String,
-    val number: Int,
-    val user: User
-)
-
-data class User(
-    val avatar_url: String,
-    val login: String,
+    val diff_url: String,
+    val changed_files: Int,
+    val additions: Int,
+    val deletions: Int,
+    val commits: Int
 )

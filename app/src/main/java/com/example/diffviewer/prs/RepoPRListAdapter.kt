@@ -5,10 +5,10 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.diffviewer.databinding.ListItemPullRequestBinding
-import com.example.diffviewer.retrofit.model.PullRequestResponse
+import com.example.diffviewer.retrofit.model.PullRequestsResponse
 import com.example.diffviewer.R
 
-class RepoPRListAdapter(private val reposPRList: ArrayList<PullRequestResponse>) : RecyclerView.Adapter<RepoPRListAdapter.ViewHolder>() {
+class RepoPRListAdapter(private val reposPRList: ArrayList<PullRequestsResponse>) : RecyclerView.Adapter<RepoPRListAdapter.ViewHolder>() {
 
     //this method is returning the view for each item in the list
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -28,7 +28,7 @@ class RepoPRListAdapter(private val reposPRList: ArrayList<PullRequestResponse>)
         return reposPRList.size
     }
 
-    fun addRepos(repos: List<PullRequestResponse>) {
+    fun addRepos(repos: List<PullRequestsResponse>) {
         this.reposPRList.apply {
             addAll(repos)
         }
@@ -40,7 +40,7 @@ class RepoPRListAdapter(private val reposPRList: ArrayList<PullRequestResponse>)
         }
     }
 
-    fun getRepos(position: Int): PullRequestResponse {
+    fun getRepos(position: Int): PullRequestsResponse {
         return reposPRList[position]
     }
 

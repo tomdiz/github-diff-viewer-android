@@ -1,4 +1,4 @@
-package com.example.diffviewer.prs
+package com.example.diffviewer.prdiff
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
@@ -6,12 +6,12 @@ import com.example.diffviewer.GitRepository
 import com.example.diffviewer.retrofit.model.Resource
 import kotlinx.coroutines.Dispatchers
 
-class RepoPRViewModel (private val gitRepository: GitRepository) : ViewModel() {
+class PRViewModel (private val gitRepository: GitRepository) : ViewModel() {
 
-    fun getRepoPRs(username: String, repo_name: String, per_page: Int, page: Int, state: String) = liveData(Dispatchers.IO) {
+    fun getPullRequest(username: String, repo_name: String, pullnumber: Int) = liveData(Dispatchers.IO) {
         emit(Resource.loading(data = null))
         try {
-            emit(Resource.success(data = gitRepository.getPullRequestsForRepo(username, repo_name, per_page, page, state)))
+            emit(Resource.success(data = gitRepository.getPullRequest(username, repo_name, pullnumber)))
         } catch (exception: Exception) {
             emit(Resource.error(data = null, message = exception.message ?: "Error Occurred!"))
         }

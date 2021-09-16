@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.example.diffviewer.databinding.FragmentRecyclerBinding
 import com.example.diffviewer.retrofit.model.Status
-import com.example.diffviewer.retrofit.model.PullRequestResponse
+import com.example.diffviewer.retrofit.model.PullRequestsResponse
 import com.example.diffviewer.retrofit.rest.ApiClient
 import com.example.diffviewer.retrofit.rest.ApiHelper
 import com.example.diffviewer.ViewModelFactory
@@ -23,6 +23,7 @@ import com.example.diffviewer.R
 import com.example.diffviewer.utils.RecyclerTouchListener
 import com.example.diffviewer.utils.replaceFragment
 import com.example.diffviewer.utils.EndlessRecyclerOnScrollListener
+import com.example.diffviewer.prdiff.PRFragment
 
 
 class RepoPRFragment : Fragment() {
@@ -83,7 +84,8 @@ class RepoPRFragment : Fragment() {
                 mBinding.recyclerView,
                 object : RecyclerTouchListener.ClickListener {
                     override fun onClick(view: View, position: Int) {
-                        //openFragment(RepoPRFragment(), adapter.getItem(position))
+                        val pr = adapter.getRepos(position)
+                        openFragment(PRFragment(), pr.number)
                     }
 
                     override fun onLongClick(view: View?, position: Int) {
@@ -110,9 +112,9 @@ class RepoPRFragment : Fragment() {
         }
     }
 
-    fun Fragment.openFragment(fragment: Fragment, username: String) {
+    fun Fragment.openFragment(fragment: Fragment, pullnumber: Int) {
         val args = Bundle()
-        args.putString("username", username)
+        args.putInt("pullnumber", pullnumber)
         fragment.arguments = args
         replaceFragment(fragment, R.id.fragment_container)
     }
@@ -161,7 +163,7 @@ class RepoPRFragment : Fragment() {
         }
     }
 
-    private fun retrieveList(repos: List<PullRequestResponse>) {
+    private fun retrieveList(repos: List<PullRequestsResponse>) {
         adapter.apply {
             if (pageno == 1) {
                 clearRepos()

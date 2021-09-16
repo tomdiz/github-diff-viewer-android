@@ -9,7 +9,7 @@
 
         <variable
             name="pr"
-            type="com.example.diffviewer.retrofit.model.PullRequestResponse" />
+            type="com.example.diffviewer.retrofit.model.PullRequestsResponse" />
     </data>
 
     <LinearLayout

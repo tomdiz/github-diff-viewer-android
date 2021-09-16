@@ -18,12 +18,19 @@ interface ApiService {
     ): ArrayList<UserReposResponse>
 
     @GET("/repos/{username}/{repo}/pulls")
-    suspend fun getPullRequestForRepo(
+    suspend fun getPullRequestsForRepo(
         @Path("username") username: String,
         @Path("repo") repoName: String,
         @Query("per_page") per_page: Int,
         @Query("page") page: Int,
         @Query("state") state: String
-    ) : ArrayList<PullRequestResponse>
+    ) : ArrayList<PullRequestsResponse>
+
+    @GET("/repos/{username}/{repo}/pulls/{pull_number}")
+    suspend fun getPullRequest(
+        @Path("username") username: String,
+        @Path("repo") repoName: String,
+        @Path("pull_number") pullnumber: Int,
+    ) : PullRequestResponse
 
 }
