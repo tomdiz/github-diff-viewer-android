@@ -2,12 +2,14 @@ package com.example.diffviewer
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
 import com.example.diffviewer.databinding.ActivityMainBinding
 import com.example.diffviewer.utils.addFragment
-import com.example.diffviewer.repos.UserReposFragment
+import io.reactivex.plugins.RxJavaPlugins
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,6 +19,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         // Define the listener for binding
         mBinding =  DataBindingUtil.setContentView(this, R.layout.activity_main)
+
+        RxJavaPlugins.setErrorHandler {
+            Log.e("Error", it.localizedMessage)
+        }
 
         val userNameFragment = UserNameFragment()
         addFragment(userNameFragment, R.id.fragment_container)
