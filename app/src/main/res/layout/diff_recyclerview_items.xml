@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aap="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_height="wrap_content"
+    app:ignore="NamespaceTypo">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="diff line 1"
+        android:textColor="#000000"
+        android:textSize="12sp"
+        android:id="@+id/diff_line_one"
+        android:layout_marginTop="5dp"
+        android:layout_gravity="center" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="diff line 1"
+        android:textSize="12sp"
+        android:id="@+id/diff_line_two"
+        android:layout_marginTop="5dp"
+        android:layout_gravity="center" />
+</LinearLayout>

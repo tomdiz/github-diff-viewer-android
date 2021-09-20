@@ -1,8 +1,20 @@
 package com.example.diffviewer.prdiff
 
-class PRDiffLines {
+class PRDiffLines(private val diffFileName: String, indexString: String) {
 
     var lines : MutableList<String> = mutableListOf<String>()    // diff individual lines
+
+    private var diff_fileName: String = diffFileName
+    private var index_string: String = indexString
+
+    fun getDiffFileName(): String {
+        return diff_fileName
+    }
+
+    fun getIndexString(): String {
+        return index_string
+    }
+
 }
 
 // Should probably parse into a nice Array of objects for display

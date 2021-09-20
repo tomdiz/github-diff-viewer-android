@@ -12,11 +12,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.diffviewer.R
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import android.widget.Toast
 import android.widget.Spinner
 import androidx.annotation.RequiresApi
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.diffviewer.ViewModelFactory
 import com.example.diffviewer.prs.RepoPRFragment
 import com.example.diffviewer.retrofit.model.PullRequestResponse
@@ -30,24 +30,26 @@ import io.reactivex.disposables.Disposables
 import io.reactivex.schedulers.Schedulers
 import okhttp3.OkHttpClient
 import java.io.File
-import java.io.BufferedReader
 import java.io.InputStream
-import java.lang.StringBuilder
 import java.nio.charset.Charset
+import java.util.ArrayList
 import java.util.concurrent.TimeUnit
 
 
 class PRFragment  : Fragment() {
 
     private lateinit var mView: View
-    private lateinit var diffWebtView: WebView
     private lateinit var spinner: Spinner
     private lateinit var viewModel: PRViewModel
 
     private var username = ""
     private var repoName = ""
     private var pullnumber = 0
-    private var allSeperateDiffs = mutableListOf<PRDiffLines>()
+    private var allSeperateDiffs = ArrayList<PRDiffLines>()
+
+    private lateinit var parentRecyclerView: RecyclerView
+    private lateinit var DiffFileAdapter: RecyclerView.Adapter<*>
+    private lateinit var parentLayoutManager: RecyclerView.LayoutManager
 
     private var disposable = Disposables.disposed()
 
@@ -79,8 +81,13 @@ class PRFragment  : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         mView = inflater.inflate(R.layout.fragment_pull_request, container, false)
-        diffWebtView = mView.findViewById(R.id.diffWebView)
-        diffWebtView.settings.setJavaScriptEnabled(true)
+
+        parentRecyclerView = mView.findViewById<RecyclerView>(R.id.diff_file_recyclerView)
+        parentRecyclerView.setHasTransientState(true)
+        parentLayoutManager = LinearLayoutManager(context)
+        DiffFileAdapter = DiffRecyclerViewAdapter(allSeperateDiffs, context)
+        parentRecyclerView.setLayoutManager(parentLayoutManager)
+        parentRecyclerView.setAdapter(DiffFileAdapter)
 
         spinner = mView.findViewById(R.id.pBar) as Spinner
         spinner.setVisibility(View.VISIBLE)
@@ -148,16 +155,6 @@ class PRFragment  : Fragment() {
             }, {
                 Toast.makeText(activity, "Completed Download", Toast.LENGTH_SHORT).show()
 
-                // Debugging purpose to verify diff file downloaded
-                /*
-                val bufferedReader: BufferedReader = targetFile.bufferedReader()
-                val inputString = bufferedReader.use { it.readText()}
-                val sb = StringBuilder("<html><body>")
-                sb.append(inputString)
-                sb.append("</body></html>")
-                diffWebtView.loadData(sb.toString(), "text/html", "UTF-8")
-                */
-
                 /*
                 Here is a sample diff format. A new diff starts on every 'diff --git'.
                 I added example of file diff, ername file and delete file.
@@ -201,7 +198,7 @@ index 0dbe9496..9a881338 100644
                 // Clean up the '.diff' file for display
                 val inputStream2: InputStream = targetFile.inputStream()
                 val reader = inputStream2.bufferedReader(Charset.defaultCharset())
-                var diffLines = PRDiffLines();//mutableListOf<String>()
+                var diffLines = PRDiffLines("File name 1", "@@ index @@")
                 var lines : MutableList<String> = mutableListOf<String>()    // diff individual lines
                 for (line in reader.lines()) {
                     println(line)
@@ -209,7 +206,7 @@ index 0dbe9496..9a881338 100644
                         if (allSeperateDiffs.count() > 0) {
                             allSeperateDiffs.add(diffLines)
                         }
-                        diffLines = PRDiffLines();
+                        diffLines = PRDiffLines("File name 1", "@@ index @@");
                         diffLines.lines.add(line)
                     }
                     else {
@@ -218,6 +215,8 @@ index 0dbe9496..9a881338 100644
                 }
                 allSeperateDiffs.add(diffLines)
                 reader.close()
+
+                DiffFileAdapter?.notifyDataSetChanged()
 
                 targetFile.delete();
                 spinner.setVisibility(View.GONE)
