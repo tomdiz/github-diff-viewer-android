@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.MeasureSpec
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -213,6 +214,7 @@ index 0dbe9496..9a881338 100644
                         if (diffLines != null) {
                             allSeperateDiffs.add(diffLines)
                         }
+                        storeFirstAt = false
                         diffLines = PRDiff();
                         diffLines.changedfile = pr.changed_files
                         val parts = line.split(" ")
