@@ -7,6 +7,8 @@ class PRDiff() {
     var diffFileName: String = ""
     var indexString: String = ""
 
+    var changedfile: Int = 0
+
     var file_deleted: Boolean = false   // File was deleted
 
     var file_minus: String = ""         // diff file with additions

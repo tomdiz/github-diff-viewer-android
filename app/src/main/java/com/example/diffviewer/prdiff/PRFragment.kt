@@ -85,9 +85,9 @@ class PRFragment  : Fragment() {
         parentRecyclerView = mView.findViewById<RecyclerView>(R.id.diff_file_recyclerView)
         parentRecyclerView.setHasTransientState(true)
         parentLayoutManager = LinearLayoutManager(context)
-        DiffFileAdapter = DiffRecyclerViewAdapter(allSeperateDiffs, context)
+//        DiffFileAdapter = DiffRecyclerViewAdapter(allSeperateDiffs, context)
         parentRecyclerView.setLayoutManager(parentLayoutManager)
-        parentRecyclerView.setAdapter(DiffFileAdapter)
+//        parentRecyclerView.setAdapter(DiffFileAdapter)
 
         spinner = mView.findViewById(R.id.pBar) as Spinner
         spinner.setVisibility(View.VISIBLE)
@@ -142,6 +142,9 @@ class PRFragment  : Fragment() {
     private fun retrieve(pr: PullRequestResponse) {
 
         val targetFile = File(context?.cacheDir, DIFF_FILE_NAME)
+
+        DiffFileAdapter = DiffRecyclerViewAdapter(allSeperateDiffs, pr.changed_files, context)
+        parentRecyclerView.setAdapter(DiffFileAdapter)
 
         disposable = fileDownloader.download(pr.diff_url, targetFile)
             .throttleFirst(2, TimeUnit.SECONDS)
@@ -198,58 +201,61 @@ index 0dbe9496..9a881338 100644
                 // Clean up the '.diff' file for display (Store important lines to a class - PRDiff)
                 val inputStream2: InputStream = targetFile.inputStream()
                 val reader = inputStream2.bufferedReader(Charset.defaultCharset())
-                var diffLines = PRDiff()
+                var diffLines: PRDiff? = null
                 var lines : MutableList<String> = mutableListOf<String>()    // diff individual lines
                 var storeFirstAt = false
                 for (line in reader.lines()) {
                     //println(line)
                     if (line.startsWith("diff --git ") == true) {
-                        if (allSeperateDiffs.count() > 0) {
+                        if (diffLines != null) {
                             allSeperateDiffs.add(diffLines)
                         }
                         diffLines = PRDiff();
+                        diffLines.changedfile = pr.changed_files
                         val parts = line.split(" ")
-                        diffLines.diffFileName = parts[2]
+                        diffLines.diffFileName = parts[2].drop(2)
                     }
                     else {
                         // Can have mulitple '@@' lines per diff file - store just first seperate
                         if (line.startsWith("@@") && storeFirstAt == false) {
-                            diffLines.indexString = line
+                            diffLines?.indexString = "  " + line
                             storeFirstAt = true;
                         }
                         else if (line.startsWith("deleted file ")) {
-                            diffLines.file_deleted = true
+                            diffLines?.file_deleted = true
                         }
                         else if (line.startsWith("--- ")) {
-                            diffLines.file_deleted = true
+                            diffLines?.file_deleted = true
                             val parts = line.split(" ")
-                            diffLines.file_minus = parts[1]
+                            diffLines?.file_minus = parts[1]
                         }
                         else if (line.startsWith("+++ ")) {
-                            diffLines.file_deleted = true
+                            diffLines?.file_deleted = true
                             val parts = line.split(" ")
-                            diffLines.file_plus = parts[1]
+                            diffLines?.file_plus = parts[1]
                         }
                         else if (line.startsWith("rename to")) {
-                            diffLines.file_deleted = true
+                            diffLines?.file_deleted = true
                             val parts = line.split(" ")
-                            diffLines.rename_to = parts[2]
+                            diffLines?.rename_to = parts[2]
                         }
                         else if (line.startsWith("rename from")) {
-                            diffLines.file_deleted = true
+                            diffLines?.file_deleted = true
                             val parts = line.split(" ")
-                            diffLines.rename_from = parts[2]
+                            diffLines?.rename_from = parts[2]
                         }
                         else {
                             // All other lines should be part of diff
                             // everything after '@@' is in the diffs
                             if (line.startsWith("index ") == false && line.startsWith("similarity ") == false) {
-                                diffLines.lines.add(line)
+                                diffLines?.lines?.add(line)
                             }
                         }
                     }
                 }
-                allSeperateDiffs.add(diffLines)
+                if (diffLines != null) {
+                    allSeperateDiffs.add(diffLines)
+                }
                 reader.close()
 
                 DiffFileAdapter?.notifyDataSetChanged()

@@ -11,17 +11,20 @@ import java.util.ArrayList
 import com.example.diffviewer.R
 
 
-class DiffRecyclerViewAdapter(diffFileList: ArrayList<PRDiff>, context: Context?) :
+class DiffRecyclerViewAdapter(diffFileList: ArrayList<PRDiff>, changedFile: Int, context: Context?) :
     RecyclerView.Adapter<DiffRecyclerViewAdapter.DiffViewHolder>() {
     private val filesArrayList: ArrayList<PRDiff>
     var cxt: Context?
+    private var change_files = 0
 
     class DiffViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var fileschanged: TextView
         var filename: TextView
         var diffindex: TextView
         var diffsRecyclerView: RecyclerView
 
         init {
+            fileschanged = itemView.findViewById(R.id.files_changed)
             filename = itemView.findViewById(R.id.diff_file_name)
             diffindex = itemView.findViewById(R.id.diff_file_index)
             diffsRecyclerView = itemView.findViewById(R.id.Diff_RV)
@@ -46,6 +49,7 @@ class DiffRecyclerViewAdapter(diffFileList: ArrayList<PRDiff>, context: Context?
         holder.diffsRecyclerView.setHasFixedSize(true)
         holder.filename.setText(currentItem.diffFileName)
         holder.diffindex.setText(currentItem.indexString)
+        holder.fileschanged.setText("Changed Files: " + currentItem.changedfile)
         val diffsRecyclerViewAdapter = FilesDiffsRecyclerViewAdapter(currentItem.lines, holder.diffsRecyclerView.context)
         holder.diffsRecyclerView.adapter = diffsRecyclerViewAdapter
     }
@@ -53,5 +57,6 @@ class DiffRecyclerViewAdapter(diffFileList: ArrayList<PRDiff>, context: Context?
     init {
         filesArrayList = diffFileList
         cxt = context
+        change_files = changedFile
     }
 }
