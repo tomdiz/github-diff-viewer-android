@@ -45,7 +45,7 @@ class PRFragment  : Fragment() {
     private var username = ""
     private var repoName = ""
     private var pullnumber = 0
-    private var allSeperateDiffs = ArrayList<PRDiffLines>()
+    private var allSeperateDiffs = ArrayList<PRDiff>()
 
     private lateinit var parentRecyclerView: RecyclerView
     private lateinit var DiffFileAdapter: RecyclerView.Adapter<*>
@@ -195,22 +195,58 @@ index 0dbe9496..9a881338 100644
      }
 
 */
-                // Clean up the '.diff' file for display
+                // Clean up the '.diff' file for display (Store important lines to a class - PRDiff)
                 val inputStream2: InputStream = targetFile.inputStream()
                 val reader = inputStream2.bufferedReader(Charset.defaultCharset())
-                var diffLines = PRDiffLines("File name 1", "@@ index @@")
+                var diffLines = PRDiff()
                 var lines : MutableList<String> = mutableListOf<String>()    // diff individual lines
+                var storeFirstAt = false
                 for (line in reader.lines()) {
-                    println(line)
+                    //println(line)
                     if (line.startsWith("diff --git ") == true) {
                         if (allSeperateDiffs.count() > 0) {
                             allSeperateDiffs.add(diffLines)
                         }
-                        diffLines = PRDiffLines("File name 1", "@@ index @@");
-                        diffLines.lines.add(line)
+                        diffLines = PRDiff();
+                        val parts = line.split(" ")
+                        diffLines.diffFileName = parts[2]
                     }
                     else {
-                        diffLines.lines.add(line)
+                        // Can have mulitple '@@' lines per diff file - store just first seperate
+                        if (line.startsWith("@@") && storeFirstAt == false) {
+                            diffLines.indexString = line
+                            storeFirstAt = true;
+                        }
+                        else if (line.startsWith("deleted file ")) {
+                            diffLines.file_deleted = true
+                        }
+                        else if (line.startsWith("--- ")) {
+                            diffLines.file_deleted = true
+                            val parts = line.split(" ")
+                            diffLines.file_minus = parts[1]
+                        }
+                        else if (line.startsWith("+++ ")) {
+                            diffLines.file_deleted = true
+                            val parts = line.split(" ")
+                            diffLines.file_plus = parts[1]
+                        }
+                        else if (line.startsWith("rename to")) {
+                            diffLines.file_deleted = true
+                            val parts = line.split(" ")
+                            diffLines.rename_to = parts[2]
+                        }
+                        else if (line.startsWith("rename from")) {
+                            diffLines.file_deleted = true
+                            val parts = line.split(" ")
+                            diffLines.rename_from = parts[2]
+                        }
+                        else {
+                            // All other lines should be part of diff
+                            // everything after '@@' is in the diffs
+                            if (line.startsWith("index ") == false && line.startsWith("similarity ") == false) {
+                                diffLines.lines.add(line)
+                            }
+                        }
                     }
                 }
                 allSeperateDiffs.add(diffLines)

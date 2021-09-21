@@ -11,7 +11,7 @@ import java.util.ArrayList
 import com.example.diffviewer.R
 
 
-class FilesDiffsRecyclerViewAdapter(var childModelArrayList: ArrayList<ChildModel>, var cxt: Context) :
+class FilesDiffsRecyclerViewAdapter(var diffLinesArrayList: ArrayList<String>, var cxt: Context) :
     RecyclerView.Adapter<FilesDiffsRecyclerViewAdapter.FilesViewHolder>() {
 
     class FilesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -31,12 +31,12 @@ class FilesDiffsRecyclerViewAdapter(var childModelArrayList: ArrayList<ChildMode
     }
 
     override fun onBindViewHolder(holder: FilesViewHolder, position: Int) {
-        val currentItem = childModelArrayList[position]
-        holder.diff_one.text = currentItem.getDiffLine1()
-        holder.diff_two.text = currentItem.getDiffLine2()
+        val currentItem = diffLinesArrayList[position]
+        holder.diff_one.text = diffLinesArrayList[0]
+        holder.diff_two.text = diffLinesArrayList[1]
     }
 
     override fun getItemCount(): Int {
-        return childModelArrayList.size
+        return diffLinesArrayList.size
     }
 }

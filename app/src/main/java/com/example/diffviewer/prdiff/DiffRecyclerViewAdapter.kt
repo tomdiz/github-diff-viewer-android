@@ -11,12 +11,12 @@ import java.util.ArrayList
 import com.example.diffviewer.R
 
 
-class DiffRecyclerViewAdapter(diffFileList: ArrayList<PRDiffLines>, context: Context?) :
-    RecyclerView.Adapter<DiffRecyclerViewAdapter.MyViewHolder>() {
-    private val filesArrayList: ArrayList<PRDiffLines>
+class DiffRecyclerViewAdapter(diffFileList: ArrayList<PRDiff>, context: Context?) :
+    RecyclerView.Adapter<DiffRecyclerViewAdapter.DiffViewHolder>() {
+    private val filesArrayList: ArrayList<PRDiff>
     var cxt: Context?
 
-    class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class DiffViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var filename: TextView
         var diffindex: TextView
         var diffsRecyclerView: RecyclerView
@@ -28,39 +28,25 @@ class DiffRecyclerViewAdapter(diffFileList: ArrayList<PRDiffLines>, context: Con
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DiffViewHolder {
         val view: View = LayoutInflater.from(parent.context)
             .inflate(R.layout.diff_file_recyclerview_items, parent, false)
-        return MyViewHolder(view)
+        return DiffViewHolder(view)
     }
 
     override fun getItemCount(): Int {
         return filesArrayList.size
     }
 
-    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val currentItem: PRDiffLines = filesArrayList[position]
+    override fun onBindViewHolder(holder: DiffViewHolder, position: Int) {
+        val currentItem: PRDiff = filesArrayList[position]
         val layoutManager: RecyclerView.LayoutManager =
             LinearLayoutManager(cxt, LinearLayoutManager.HORIZONTAL, false)
         holder.diffsRecyclerView.layoutManager = layoutManager
         holder.diffsRecyclerView.setHasFixedSize(true)
-        holder.filename.setText(currentItem.getDiffFileName())
-        val arrayList: ArrayList<ChildModel> = ArrayList<ChildModel>()
-
-        if (filesArrayList[position].getDiffFileName().equals("File name 1")) {
-            arrayList.add(ChildModel("diff line 1", "diff line 2"))
-            arrayList.add(ChildModel("diff line 1", "diff line 2"))
-            arrayList.add(ChildModel("diff line 1", "diff line 2"))
-            arrayList.add(ChildModel("diff line 1", "diff line 2"))
-        }
-
-        if (filesArrayList[position].getDiffFileName().equals("File name 2")) {
-            arrayList.add(ChildModel("diff line 1", "diff line 2"))
-            arrayList.add(ChildModel("diff line 1", "diff line 2"))
-        }
-
-        val diffsRecyclerViewAdapter =
-            FilesDiffsRecyclerViewAdapter(arrayList, holder.diffsRecyclerView.context)
+        holder.filename.setText(currentItem.diffFileName)
+        holder.diffindex.setText(currentItem.indexString)
+        val diffsRecyclerViewAdapter = FilesDiffsRecyclerViewAdapter(currentItem.lines, holder.diffsRecyclerView.context)
         holder.diffsRecyclerView.adapter = diffsRecyclerViewAdapter
     }
 
