@@ -15,43 +15,30 @@ import com.example.diffviewer.R
 class FilesDiffsRecyclerViewAdapter(var diffLinesArrayList: ArrayList<String>, var context: Context) :
     RecyclerView.Adapter<FilesDiffsRecyclerViewAdapter.FilesViewHolder>() {
 
-    class FilesViewHolder(itemView: View, cxt: Context) : RecyclerView.ViewHolder(itemView) {
-//        var diff_one: TextView
-//        var diff_two: TextView
+    class FilesViewHolder(itemView: View, var diffLinesArrayList: ArrayList<String>, cxt: Context) : RecyclerView.ViewHolder(itemView) {
         var context: Context? = null
 
         init {
             context = cxt
-//            diff_one = itemView.findViewById(R.id.diff_line_one)
-//            diff_two = itemView.findViewById(R.id.diff_line_two)
             var mListView = itemView.findViewById<ListView>(R.id.userlist)
 
             val arrayAdapter: ArrayAdapter<*>
-            val users = arrayOf(
-                "Virat Kohli", "Rohit Sharma", "Steve Smith",
-                "Kane Williamson", "Ross Taylor"
-            )
-
-            arrayAdapter = ArrayAdapter(cxt, android.R.layout.simple_list_item_1, users)
+            arrayAdapter = ArrayAdapter(cxt, android.R.layout.simple_list_item_1, diffLinesArrayList)
             mListView.adapter = arrayAdapter
-
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilesViewHolder {
         val view: View = LayoutInflater.from(parent.context)
             .inflate(R.layout.diff_recyclerview_items, parent, false)
-        return FilesViewHolder(view, parent.context)
+        return FilesViewHolder(view, diffLinesArrayList, parent.context)
     }
 
     override fun onBindViewHolder(holder: FilesViewHolder, position: Int) {
-        val currentItem = diffLinesArrayList[position]
-//        holder.diff_one.text = diffLinesArrayList[0]
-//        holder.diff_two.text = diffLinesArrayList[1]
     }
 
     override fun getItemCount(): Int {
-        return 2//diffLinesArrayList.size
+        return 2
     }
 
 }

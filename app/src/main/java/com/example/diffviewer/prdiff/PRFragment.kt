@@ -34,7 +34,8 @@ import java.io.InputStream
 import java.nio.charset.Charset
 import java.util.ArrayList
 import java.util.concurrent.TimeUnit
-
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.core.content.ContextCompat
 
 class PRFragment  : Fragment() {
 
@@ -85,9 +86,11 @@ class PRFragment  : Fragment() {
         parentRecyclerView = mView.findViewById<RecyclerView>(R.id.diff_file_recyclerView)
         parentRecyclerView.setHasTransientState(true)
         parentLayoutManager = LinearLayoutManager(context)
-//        DiffFileAdapter = DiffRecyclerViewAdapter(allSeperateDiffs, context)
         parentRecyclerView.setLayoutManager(parentLayoutManager)
-//        parentRecyclerView.setAdapter(DiffFileAdapter)
+
+        val itemDecorator = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
+        itemDecorator.setDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.divider)!!)
+        parentRecyclerView.addItemDecoration(itemDecorator)
 
         spinner = mView.findViewById(R.id.pBar) as Spinner
         spinner.setVisibility(View.VISIBLE)
