@@ -30,7 +30,7 @@ class FilesDiffsRecyclerViewAdapter(var diffLinesArrayList: ArrayList<String>, v
             val arrayAdapter: ArrayAdapter<*>
             arrayAdapter = ArrayAdapter(cxt, android.R.layout.simple_list_item_1, diffLinesArrayList)
             mListView.adapter = arrayAdapter
-/*
+///*
             val temp = diffLinesArrayList.count()
             var totalHeight = 0
             val desiredWidth = MeasureSpec.makeMeasureSpec(mListView.getWidth(), MeasureSpec.AT_MOST)
@@ -43,7 +43,7 @@ class FilesDiffsRecyclerViewAdapter(var diffLinesArrayList: ArrayList<String>, v
             params.height = totalHeight + mListView.getDividerHeight() * (arrayAdapter.getCount() - 1)
             mListView.setLayoutParams(params)
             mListView.requestLayout()
- */
+//*/
         }
     }
 
